@@ -10,6 +10,7 @@ namespace E_commerce.Models
         public string? Fname { get; set; }
         public string? Lname { get; set; }
         public string? username { get; set; }
+        public string? password { get; set; }
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public string? Address { get; set; }
