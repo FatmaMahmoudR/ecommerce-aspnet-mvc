@@ -20,5 +20,7 @@ namespace E_commerce.Models
         public int? SellerId { get; set; }
 
         public virtual Seller? Seller { get; set;}
+        public virtual ICollection<OrderedProduct> OrderedProducts { get; set; } = new HashSet<OrderedProduct>();
+
     }
 }
