@@ -7,8 +7,6 @@ namespace E_commerce.Models
         [Key]
         public int Id { get; set; }
         public string? Name { get; set; }
-        public string? Fname { get; set; }
-        public string? Lname { get; set; }
         public string? username { get; set; }
         public string? password { get; set; }
         public string? Phone { get; set; }

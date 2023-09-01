@@ -10,14 +10,15 @@ namespace E_commerce.Models
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public Category ? Category { get; set; }
+        public Category? Category { get; set; }
+        public Gender? M_F { get; set; }
         public int? Quantity { get; set; }
         public double? Price { get; set; }
 
         public string? Image { get; set; }
 
         [ForeignKey("Seller")]
-        public int? SellerId { get; set; }
+        public int SellerId { get; set; }
 
         public virtual Seller? Seller { get; set;}
         public virtual ICollection<OrderedProduct> OrderedProducts { get; set; } = new HashSet<OrderedProduct>();

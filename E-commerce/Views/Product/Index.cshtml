@@ -18,29 +18,30 @@
             {
                 <div class="col mb-5">
                     <div class="card h-100">
+                        <!-- Seller Name -->
+                        <button class="btn btn-outline-dark float-end" style="text-align:end; width:50; " type="submit" href="/Product/edit/@p[x].Id">
+                            <i class="bi bi-pen"></i>
+
+                        </button>
+                        <span class="text-danger" style=" Color:darkred; font:700; padding-left:7px; display:inline ">Seller: @s[p[x].SellerId-1].Name</span>
+
+                        
                         <!-- Product image-->
                         <img class="card-img-top" src="/img/Products/@p[x].Image" alt="..." />
+
                         <!-- Product details-->
                         <div class="card-body p-4">
                             <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">@p[x].Name</h5>
-                                <!-- Product price-->
-                               
-                                
-                                @{
-                                    var num = @p[x].SellerId;
-                                }
-                                
-                                <p >  </p>
-
+                                <h class="fw-bolder">@p[x].Name</h>
                                 <p> @p[x].Category </p>
                                 <p> $@p[x].Price </p>
                             </div>
                         </div>
                         <!-- Product actions-->
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                            <div class="text-center">
+                                <a class="btn btn-outline-dark mt-auto" href="/Product/details/@p[x].Id">Add To Card</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -52,3 +53,20 @@
     </div>
 </section>
 
+@section SearchBar {
+    <form action="/Product/Search" method="get" class="form-inline d-flex" style="padding:10px">
+        <input class="form-control" type="text" name="value" placeholder="Search products" />
+        <button class="btn btn-outline-dark" type="submit">
+            <i class="bi bi-search" style="padding:10"></i>
+        </button>
+    </form>
+}
+
+
+<style>
+    
+    .form-control {
+        width: auto;
+        display:inline;
+    }
+</style>

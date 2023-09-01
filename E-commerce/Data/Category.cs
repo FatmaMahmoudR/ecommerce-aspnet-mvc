@@ -2,9 +2,10 @@
 {
     public enum Category
     {
-        camera = 1,
-        phone,
-        watch,
-        headphone
+        Sneaker = 1,
+        Heel,
+        Flat,
+        Boot,
+        Classic
     }
 }
