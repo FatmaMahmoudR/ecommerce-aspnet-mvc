@@ -1,4 +1,5 @@
 ﻿using E_commerce.Data;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,6 +12,7 @@ namespace E_commerce.Models
         public string? Name { get; set; }
         public string? Description { get; set; }
         public Category? Category { get; set; }
+        [DisplayName("For")]
         public Gender? M_F { get; set; }
         public int? Quantity { get; set; }
         public double? Price { get; set; }

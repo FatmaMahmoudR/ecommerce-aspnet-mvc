@@ -1,0 +1,91 @@
+﻿@using E_commerce.Data;
+@model Product
+@{
+    ViewData["Title"] = "Edit";
+    SelectList Categories = new SelectList(Enum.GetValues(typeof(Category)));
+    SelectList Genders = new SelectList(Enum.GetValues(typeof(Gender)));
+    SelectList sellers = new SelectList(ViewBag.sellers, "Id", "Name");
+}
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                <img class="card-img-top mb-5 mb-md-0" src="/img/edit.jpg" alt="..." />
+            </div>
+            <div class="col-md-6">
+
+                <form method="Post" action="/Product/SaveAfterEdit/@Model.Id">
+                    <div class="form-group">
+                       
+                        <input asp-for="Id" value="@Model.Id" hidden />
+                        <input asp-for="Image" value="@Model.Image" hidden/>
+
+                        
+
+                        <label asp-for="Image" >Image</label>
+                        <img src="/img/Products/@Model.Image" style="width: 100px;" />
+                        <input asp-for="Image" value="@Model.Image" accept="image/*" type="file" class="form-control" placeholder="Insert Image">
+                        <span asp-validation-for="Image" class="text-danger"></span> 
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Name">Name</label>
+                        <input asp-for="Name" value="@Model?.Name" type="text" class="form-control" placeholder="Enter name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description">Description</label>
+                        <input asp-for="Description" value="@Model?.Description" type="text" class="form-control" placeholder="Enter Description">
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price">Price</label>
+                        <input asp-for="Price" value="@Model?.Price" type="number" class="form-control" placeholder="Enter Price">
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Quantity">Quantity</label>
+                        <input asp-for="Quantity" value="@Model?.Quantity" type="number" class="form-control" placeholder="Enter Available quantity">
+                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Category"></label>
+                        <select class="form-control" asp-for="Category" asp-items="Categories"></select>
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="M_F"></label>
+                        <select class="form-control" asp-for="M_F" asp-items="Genders"></select>
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SellerId"></label>
+                        <select class="form-control" asp-for="SellerId" asp-items="sellers"></select>
+
+                    </div>
+                    <br />
+
+                    <div style="padding-bottom: 5px; ">
+                        <button type="submit" class="btn btn-outline-success">Submit</button>
+                    </div>
+                    <br />
+                    <div>
+                        <a href="/Product/Index" class=" btn btn-outline-secondary"> Back to List </a>
+                    </div>
+                    <br />
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}
+

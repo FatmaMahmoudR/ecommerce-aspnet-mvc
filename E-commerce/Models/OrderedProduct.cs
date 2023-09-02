@@ -16,6 +16,7 @@ namespace E_commerce.Models
 
         [ForeignKey("Card")]
         public int? CardID { get; set; }
+        public int? Quantity { get; set; }
 
         public virtual Product? Product { get; set; }
         public virtual Buyer? Buyer { get; set; }

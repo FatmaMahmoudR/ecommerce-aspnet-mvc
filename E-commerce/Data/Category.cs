@@ -6,6 +6,7 @@
         Heel,
         Flat,
         Boot,
-        Classic
+        Classic,
+        Other
     }
 }

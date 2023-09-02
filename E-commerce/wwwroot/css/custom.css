@@ -29,18 +29,22 @@ Table of contents
 
 
 /* Hero Carousel */
-#template-mo-zay-hero-carousel { background: #efefef !important;}
+#template-mo-zay-hero-carousel{
 
-/* Carousel Hero */
-#template-mo-zay-hero-carousel .carousel-indicators li {
-  margin-top: -50px;
-  background-color: #59ab6e;
+    background: #efefef !important;
 }
-#template-mo-zay-hero-carousel .carousel-control-next i,
-#template-mo-zay-hero-carousel .carousel-control-prev i {
-  color: #59ab6e !important;
-  font-size: 2.8em !important;
-}
+
+    /* Carousel Hero */
+    #template-mo-zay-hero-carousel .carousel-indicators li {
+        margin-top: -50px;
+        background-color: #59ab6e;
+    }
+
+    #template-mo-zay-hero-carousel .carousel-control-next i,
+    #template-mo-zay-hero-carousel .carousel-control-prev i {
+        color: #59ab6e !important;
+        font-size: 2.8em !important;
+    }
 
 /*
 // Extra small devices (portrait phones, less than 576px)
@@ -48,11 +52,12 @@ Table of contents
 */
 /* Small devices (landscape phones, 576px and up)*/
 .product-wap .h3, .product-wap li, .product-wap i, .product-wap p {
-  font-size: 12px !important;
+    font-size: 12px !important;
 }
+
 .product-wap .product-color-dot {
-  width: 6px;
-  height: 6px;
+    width: 6px;
+    height: 6px;
 }
 
 

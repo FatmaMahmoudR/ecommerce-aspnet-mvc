@@ -4,6 +4,11 @@
 }
 
 
+
+
+
+
+
 @{
     int x = 0;
     var p = Model.Products;
@@ -14,19 +19,48 @@
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <div class="col mb-5">
+                <div class="card text-white bg-danger h-90">
+
+                    <div class="card-header">ADD NEW PRODUCT</div>
+                    <div class="card-body">
+                        <a href="/Product/New">
+
+                            <img class="card-img-top Center" src="/img/addnew.jpg" alt="..." />
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+               
+
             @while(x < Model.Products.Count())
             {
                 <div class="col mb-5">
                     <div class="card h-100">
                         <!-- Seller Name -->
-                        <button class="btn btn-outline-dark float-end"  width:50; " type="submit" href="/Product/edit/@p[x].Id">
-                            <i class="bi bi-pen" style="text-align:end;></i>
 
-                        </button>
-                        <span class="text-danger" style=" Color:darkred; font:700; padding-left:7px; display:inline ">Seller: @s[p[x].SellerId-1].Name</span>
-
-                        
+                        <div class="card-header d-flex justify-content-between align-items-start">
+                            <!-- Seller Name -->
+                            <span class="text-danger" style="color: darkred; font-weight: 700;">
+                                Seller: @s[p[x].SellerId-1].Name
+                            </span>
+                            <div>
+                                <a class="btn btn-outline-dark" href="/Product/edit/@p[x].Id">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a class="btn btn-outline-danger" href="/Product/delete/@p[x].Id">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </div>
                         <!-- Product image-->
+                        
+                        <br>
+                        <br>
+
+
                         <img class="card-img-top" src="/img/Products/@p[x].Image" alt="..." />
 
                         <!-- Product details-->
@@ -57,11 +91,12 @@
     <form action="/Product/Search" method="get" class="form-inline d-flex" style="padding:10px">
         <input class="form-control" type="text" name="value" placeholder="Search products" />
         <button class="btn btn-outline-dark" type="submit">
-            <i class="bi bi-search" style="padding:10"></i>
+            <i class="bi bi-search" style="padding:10px"></i>
         </button>
     </form>
 }
 
+}
 
 <style>
     
@@ -69,4 +104,17 @@
         width: auto;
         display:inline;
     }
+
+    .center {
+        
+        margin-bottom: auto;
+        margin-top: auto;
+       
+    }
+
 </style>
+
+
+
+
+
