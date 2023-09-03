@@ -1,4 +1,4 @@
-﻿namespace E_commerce.Data
+﻿namespace E_commerce.Data.Enum
 {
     public enum Category
     {

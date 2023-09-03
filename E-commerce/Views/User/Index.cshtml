@@ -1,0 +1,100 @@
+﻿
+
+@model List<Seller>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="images">
+    <div class="image-i">
+        <a asp-action="Login" asp-controller="Buyer">
+            <img src="/img/b2.jpg" alt="Image 1">
+        
+        <h4 class="image-text">Join as a Buyer</h4>
+        </a>
+    </div>
+    <div class="image-i">
+        <a asp-action="Login" asp-controller="Seller">
+            <img src="/img/seller.jpg" alt="Image 2">
+        
+        <h4 class="image-text">Join AS a Seller</h4>
+        </a>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <p>
+            <h4>List of all users</h4>
+        </p>
+
+        <table class="table">
+            <thead>
+                <tr class="text-center">
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.username)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+<style>
+    .images {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+    }
+
+    .image-i {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 10px;
+    }
+
+        .image-i a {
+            display: inline-block;
+            position: relative;
+        }
+
+        .image-i img {
+            width: 350px;
+            transition: box-shadow 0.3s;
+        }
+
+        .image-i:hover img {
+            box-shadow: 0 0 10px yellow;
+        }
+
+    .image-text {
+        margin-top: 10px;
+        font-weight: bold;
+        text-align:center;
+        color:black;
+    }
+</style>
+
+

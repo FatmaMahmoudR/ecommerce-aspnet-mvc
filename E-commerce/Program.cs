@@ -1,3 +1,8 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 namespace E_commerce
 {
     public class Program
@@ -8,6 +13,7 @@ namespace E_commerce
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSession(); // Add session service
 
             var app = builder.Build();
 
@@ -19,13 +25,15 @@ namespace E_commerce
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection(); 
+            app.UseHttpsRedirection();
 
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession(); // Use session middleware
 
             app.MapControllerRoute(
                 name: "default",
