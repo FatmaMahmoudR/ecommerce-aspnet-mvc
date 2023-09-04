@@ -12,12 +12,19 @@ namespace E_commerce.Controllers
 {
     public class UserController : Controller
     {
+        
         EcommerceCountext db = new EcommerceCountext();
      
         public IActionResult Index()
         {
             var U = db.Sellers.ToList();
             return View(U);
+        }
+
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
 
 

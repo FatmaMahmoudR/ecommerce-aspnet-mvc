@@ -1,6 +1,7 @@
-﻿﻿
+﻿@inject IHttpContextAccessor _contxt;
 @{
     ViewData["Title"] = "_Layout2";
+  
 }
 
 <head>
@@ -47,48 +48,81 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                     <li class="nav-item"><a class="nav-link active" asp-action="index" asp-controller="Home">Home</a></li>
                     <li class="nav-item"><a class="nav-link" asp-action="index" asp-controller="Product">Shop</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li
+                    >
+                    @if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username")))   // Authentication to show the Settings Part
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                @if (_contxt.HttpContext.Session.GetString("UserRole") == "Buyer") // Redirect buyers to "/Buyer/Profile" and Sellers to "/Seller/Profile"
+                                {
+                                    <a class="dropdown-item" asp-controller="Buyer" asp-action="Profile"><i class="bi bi-person"></i>Profile</a>
+                                }else
+                                {
+                                    <a class="dropdown-item" asp-controller="Seller" asp-action="Profile"><i class="bi bi-person"></i>Profile</a>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="bi bi-gear"></i> Settings
-                        </a>
+                                }
 
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" >
-                            <a style="justify-content: space-around; padding: 10px 0 10px 3px;" class="dropdown-item" asp-controller="Home" asp-action="Index"><i class="bi bi-person"></i>Profile</a>
-                            <a style="justify-content: space-around; padding: 10px 0 10px 3px;" class="dropdown-item" asp-controller="Product" asp-action="Index"><i class="bi bi-receipt"></i>Sales</a>
-                            <a style="justify-content: space-around; padding: 10px 0 10px 3px;" class="dropdown-item" asp-controller="Card" asp-action="Index"><i class="bi bi-box-arrow-left"></i> LogOut</a>
-                        </div>
-                    </li>
+                                @if (_contxt.HttpContext.Session.GetString("UserRole") == "Seller") //Only "Seller" user can access this.
+                                {   
+                                    <a class="dropdown-item" asp-controller="Product" asp-action="Index"><i class="bi bi-receipt"></i>Sales</a>
+                                }
 
+                                <a class="dropdown-item" asp-controller="User" asp-action="LogOut"><i class="bi bi-box-arrow-left"></i> LogOut</a>
+                            </div>
+                        </li>
+                    }
                    
-
                 </ul>
 
 
 
+                @if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username")))   // Authentication to show the Settings Part
+                {
+                    <form class="d-flex">
+                        <button class="btn btn-outline-sucess" style="margin-top:15px; margin-right:20px; border-color: green;" type="submit">
+                            <i style="color:green" class="bi bi-person-fill"></i>
+                            Hello @_contxt.HttpContext.Session.GetString("username")
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form class="d-flex" asp-action="Index" asp-controller="User">
+                        <button class="btn btn-outline-warning" style="margin-top:15px; color:black" type="submit">
+                            <i style="color:black; " class="bi bi-person-fill-exclamation"></i>
+                            Login
+                        </button>
+                    </form>
+                }
+
+                
+
                 @RenderSection("SearchBar",false)
 
 
-                <form class="d-flex">
-                    <button class="btn btn-outline-dark" type="submit">
-                        <i class="bi-cart-fill me-1"></i>
-                        Cart
-                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                    </button>
-                </form>
+                @if (_contxt.HttpContext.Session.GetString("UserRole") == "Buyer")       //Only Buyers can put items into their Cards
+                {
+                    <form class="d-flex">
+                        <button class="btn btn-outline-dark" style="margin-top:15px" type="submit">
+                            <i class="bi-cart-fill me-1"></i>
+                            Cart
+                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                        </button>
+                    </form>
+                }
+             
+                
 
             </div>
         </div>
     </nav>
 
 
-
-
     @RenderBody()
-
-
-
 
     <!-- Footer-->
     <footer class="py-5 bg-dark">
@@ -97,3 +131,13 @@
     
 
 </body>
+
+@RenderSection("scripts",false)
+<style>
+    .a{
+        justify-content: space-around;
+        padding: 10px 0 10px 3px;
+    }
+</style>
+
+

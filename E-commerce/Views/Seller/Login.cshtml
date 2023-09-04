@@ -2,25 +2,23 @@
     ViewData["Title"] = "Login";
 }
 
-<h2>Login</h2>
-
 @if (ViewBag.Notification != null)
 {
     <div class="alert alert-danger">@ViewBag.Notification</div>
 }
 
 
-
-<div class="row">
+<div class="row" >
     <div class="col-md-6 offset-3">
-        <p>
-            <h4>Sign up for a new account</h4>
-        </p>
+       
 
-
-        <div class="row">
+        <div class="row" style=" border-style: solid; border-color:gray; border-radius:10px; border-width:1px ">
             <div class="col-md-8 offset-2">
-                <form method="Post" action="/Seller/Register2/@Model">
+                <p>
+                    <h3>Login</h3>
+                </p>
+
+                <form method="Post" action="/Seller/Login/">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 
@@ -33,16 +31,19 @@
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" class="form-control" required>
                     </div>
-
+                    <br />
                     <button type="submit" class="btn btn-primary">Login</button>
 
-
-                    <div class="form-group">
-                        <input class="btn btn-outline-success float-right" type="submit" value="Sign up" />
-                        <a class="btn btn-outline-secondary" asp-controller="User" asp-action="Index">Cancel</a>
-                    </div>
                 </form>
+               
+                <div>
+                    <a class="btn btn-outline-secondary" asp-controller="Seller" asp-action="Register">Register</a>
+                    <a class="btn btn-outline-secondary" asp-controller="User" asp-action="Index">Cancel</a>
+                </div>
+                <br />
             </div>
         </div>
     </div>
 </div>
+<br /><br /><br />
+

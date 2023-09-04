@@ -1,29 +1,25 @@
-﻿@model Buyer;
+﻿@model Buyer
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Profile";
 }
 
 <br /><br />
 
-@if (ViewBag.Notification != null)
-{
-    <div class="alert alert-danger">@ViewBag.Notification</div>
-}
-
-
-<div class="row" >
+@* <div>
+    <img src="/img/Products/@Model.ProfilePicture" alt="profilePCC" />
+</div> *@
+<div class="row">
     <div class="col-md-6 offset-3">
-       
+
 
 
         <div class="row" style=" border-style: solid; border-color:gray; border-radius:10px; border-width:1px ">
-           
+            <p>
+                <h3 style="margin-left:20px">Profile</h3>
+            </p>
 
+            
             <div class="col-md-8 offset-2">
-                <p>
-                    <h3 >Sign up</h3>
-                </p>
-
                 <form method="Post" action="/Buyer/Register2/@Model">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -41,27 +37,39 @@
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="password" class="control-label"></label>
-                        <input asp-for="password" value="@Model?.password" type="password" class="form-control" />
-                        <span asp-validation-for="password" class="text-danger"></span>
+                        <label asp-for="Phone" class="control-label"></label>
+                        <input asp-for="Phone" value="@Model?.Phone" type="text" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
                     </div>
 
+                    
                     <div class="form-group">
                         <label asp-for="Email" class="control-label"></label>
                         <input asp-for="Email" value="@Model?.Email" type="email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
-                    <br />
-                    <button type="submit" class="btn btn-primary">Register</button>
-                    <a class="btn btn-outline-secondary" asp-controller="User" asp-action="Index">Cancel</a>
-
-                    <br /><br />
+                    <div class="form-group">
+                        <label asp-for="AccCreationDate" class="control-label"></label>
+                        <input asp-for="AccCreationDate" value="@Model?.AccCreationDate" type="text" class="form-control" />
+                        <span asp-validation-for="AccCreationDate" class="text-danger"></span>
+                    </div>
                     
+                    <br /><br />
+
                 </form>
-                
+
             </div>
         </div>
     </div>
 </div>
 <br />
-<br /><br />
+<br />
+<br />
+
+
+@section scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    }

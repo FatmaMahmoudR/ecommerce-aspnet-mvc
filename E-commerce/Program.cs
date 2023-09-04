@@ -13,7 +13,15 @@ namespace E_commerce
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddSession(); // Add session service
+
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options=>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(120);
+            });
+
 
             var app = builder.Build();
 
@@ -29,11 +37,13 @@ namespace E_commerce
 
             app.UseStaticFiles();
 
+            app.UseSession(); // Use session middleware
+
+
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseSession(); // Use session middleware
 
             app.MapControllerRoute(
                 name: "default",

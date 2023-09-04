@@ -7,8 +7,8 @@ namespace E_commerce.Models
     {
         [Key]
         public int ShippinginfoID { get; set; }
-        public  string? Address { get; set; }
-        public  string? City { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; }
         public int? PostalCode { get; set; }
 
         [ForeignKey("buyer")]

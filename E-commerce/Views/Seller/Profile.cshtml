@@ -1,0 +1,80 @@
+﻿@model Seller
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<br /><br />
+
+@* <div>
+    <img src="/img/Products/@Model.ProfilePicture" alt="profilePCC" />
+</div> *@
+<div class="row">
+    <div class="col-md-6 offset-3">
+
+
+
+        <div class="row" style=" border-style: solid; border-color:gray; border-radius:10px; border-width:1px ">
+            <p>
+                <h3 style="margin-left:20px">Profile</h3>
+            </p>
+
+            
+            <div class="col-md-8 offset-2">
+                <form method="Post" action="/Seller/Register2/@Model">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="Bio" class="control-label"></label>
+                        <input asp-for="Bio" value="@Model?.Bio" type="text" class="form-control" />
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" value="@Model?.Name" type="text" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="username" class="control-label"></label>
+                        <input asp-for="username" value="@Model?.username" type="text" class="form-control" />
+                        <span asp-validation-for="username" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Phone" class="control-label"></label>
+                        <input asp-for="Phone" value="@Model?.Phone" type="text" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" value="@Model?.Email" type="email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AccCreationDate" class="control-label"></label>
+                        <input asp-for="AccCreationDate" value="@Model?.AccCreationDate" type="text" class="form-control" />
+                        <span asp-validation-for="AccCreationDate" class="text-danger"></span>
+                    </div>
+                    
+                    <br /><br />
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+
+
+@section scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    }
