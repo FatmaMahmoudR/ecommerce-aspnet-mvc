@@ -2,7 +2,7 @@
 
 namespace E_commerce.Models
 {
-    public class Buyer: User
+    public class Buyer : User
     {
         public virtual ICollection<ShippingInfo> ShippingInfos { get; set; } = new HashSet<ShippingInfo>();
 

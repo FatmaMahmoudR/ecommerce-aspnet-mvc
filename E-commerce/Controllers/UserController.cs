@@ -17,8 +17,8 @@ namespace E_commerce.Controllers
      
         public IActionResult Index()
         {
-            var U = db.Sellers.ToList();
-            return View(U);
+           
+            return View();
         }
 
         public IActionResult LogOut()
