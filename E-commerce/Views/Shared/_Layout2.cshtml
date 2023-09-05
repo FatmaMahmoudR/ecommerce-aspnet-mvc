@@ -1,4 +1,5 @@
 ﻿@inject IHttpContextAccessor _contxt;
+
 @{
     ViewData["Title"] = "_Layout2";
   
@@ -59,6 +60,8 @@
                                 @if (_contxt.HttpContext.Session.GetString("UserRole") == "Buyer") // Redirect buyers to "/Buyer/Profile" and Sellers to "/Seller/Profile"
                                 {
                                     <a class="dropdown-item" asp-controller="Buyer" asp-action="Profile" asp-route-id="@_contxt.HttpContext.Session.GetInt32("id")" ><i class="bi bi-person"></i> Profile</a>
+                                    <a class="dropdown-item" asp-controller="Buyer" asp-action="PrevOrders" asp-route-id="@_contxt.HttpContext.Session.GetInt32("id")"><i class="bi bi-receipt"></i> Orders</a>
+
                                 }else
                                 {
                                     <a class="dropdown-item" asp-controller="Seller" asp-action="Profile" asp-route-id="@_contxt.HttpContext.Session.GetInt32("id")"><i class="bi bi-person"></i> Profile</a>
@@ -106,11 +109,13 @@
 
                 @if (_contxt.HttpContext.Session.GetString("UserRole") == "Buyer")       //Only Buyers can put items into their Cards
                 {
-                    <form class="d-flex">
+                    <form class="d-flex" asp-action="Index" asp-controller="Card" asp-route-id="@_contxt.HttpContext.Session.GetInt32("id")">
                         <button class="btn btn-outline-dark" style="margin-top:15px" type="submit">
                             <i class="bi-cart-fill me-1"></i>
                             Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                            <span class="badge bg-dark text-white ms-1 rounded-pill">
+                                @_contxt.HttpContext.Session.GetInt32("card")
+                                </span>
                         </button>
                     </form>
                 }

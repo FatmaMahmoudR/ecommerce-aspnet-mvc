@@ -20,8 +20,9 @@
 
             
             <div class="col-md-8 offset-2">
-                <form method="Post" action="/Seller/Register2/@Model">
+                <form method="Post" action="/Seller/SaveChange/@Model.Id">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="Id" value="@Model.Id" hidden />
 
                     <div class="form-group">
                         <label asp-for="Bio" class="control-label"></label>
@@ -60,7 +61,7 @@
                     </div>
                     
                     <br />
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                     <a class="btn btn-outline-secondary" asp-controller="User" asp-action="Index">Cancel</a>
 
                     <br /><br />

@@ -28,26 +28,25 @@ namespace E_commerce.Controllers
             return View(seller);
         }
 
+        [HttpPost]
         public IActionResult SaveChange(Seller NewP, int Id)
         {
             Seller OldP = db.Sellers.Find(Id);
 
             
-            if (ModelState.IsValid == true)
-            {
+            
+            
                 OldP.Name = NewP.Name;
                 OldP.Id = NewP.Id;
-                OldP.username = NewP.username;
-                OldP.password = NewP.password;
+                
                 OldP.Phone = NewP.Phone;
                 OldP.ProfilePicture = NewP.ProfilePicture;
                 OldP.AccCreationDate = NewP.AccCreationDate;
                 OldP.Bio = NewP.Bio;
                 OldP.Email = NewP.Email;
                 db.SaveChanges();
-                return RedirectToAction("profile","Seller",Id);
-
-            }
+                return RedirectToAction("Index", "Home");
+            
             return View("Profile", NewP);
         }
 

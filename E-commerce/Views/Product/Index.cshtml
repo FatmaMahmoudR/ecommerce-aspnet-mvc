@@ -46,9 +46,11 @@
                         <!-- Card Header -->
                         <div class="card-header d-flex justify-content-between align-items-start">
                             <!-- Seller Name -->
+                            @{
+                                string sellerName = Model.Sellers.FirstOrDefault(s => s.Id == p[x].SellerId).Name;
+                            }
                             <span class="text-danger" style="color: darkred; font-weight: 700;">
-                                Seller: @s[p[x].SellerId-1].Name
-                            </span>
+                                Seller: @sellerName
                             @if (_contxt.HttpContext.Session.GetString("UserRole") == "Seller")       //Only Sellers can edit or delete 
                             {
                                 <div>

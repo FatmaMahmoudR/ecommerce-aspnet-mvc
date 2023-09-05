@@ -152,14 +152,18 @@ namespace E_commerce.Controllers
             op.BuyerID = (int)_contxt.HttpContext.Session.GetInt32("id");
             op.Quantity = vm.quantity;
 
-            //retreive the card of the customer from database to update it with the new added product
-            Card c = db.Cards.Where(x => x.BuyerId == op.BuyerID).FirstOrDefault();
-            op.Card = c;
+            //retreive the active card of the customer from database to update it with the new added product
+            Card c = db.Cards.Where(x => x.BuyerId == op.BuyerID && x.active==true).FirstOrDefault();
+            op.CardID = c.Id;
             db.OrderedProducts.Add(op);
             db.SaveChanges();
 
-            c.OrderedProducts.Add(op);
-            db.SaveChanges();
+            //increase card session by 1
+
+            c.OrderedProducts = db.OrderedProducts.Where(x => x.BuyerID == op.BuyerID && x.Card.active==true).ToList();
+            _contxt.HttpContext.Session.SetInt32("card", c.OrderedProducts.Count());
+
+           
 
             // minus the ordered quantity of this item from the available amount
             Product OldP = db.Products.Find(op.productID);
@@ -171,7 +175,8 @@ namespace E_commerce.Controllers
              return RedirectToAction("index");
         }
 
-        //Redirect to pevious page 
+
+        //Action to Redirect to pevious page 
         public IActionResult RedirectToPreviousView()
         {
             string previousUrl = Request.Headers["Referer"].ToString();
@@ -186,6 +191,13 @@ namespace E_commerce.Controllers
                 return RedirectToAction("Index", "Home"); // Redirect to a default page
             }
         }
+
+        public IActionResult unavailableProduct ()
+        {
+            return View();
+        }
+
+
 
     }
 }

@@ -14,6 +14,7 @@ namespace E_commerce.Models
 
         public DateTime? DeliveryDate { get; set; }
         public string? ShippingStatus { get; set; }
+        public bool? active { get; set; }   //current using card 
 
         public virtual Buyer? Buyer { get; set; }
 

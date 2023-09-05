@@ -4,6 +4,7 @@ using E_commerce.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerce.Migrations
 {
     [DbContext(typeof(EcommerceCountext))]
-    partial class EcommerceCountextModelSnapshot : ModelSnapshot
+    [Migration("20230905175603_activeCard")]
+    partial class activeCard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,6 +77,9 @@ namespace E_commerce.Migrations
                     b.Property<int?>("BuyerId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CompletedOrderId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("DeliveryDate")
                         .HasColumnType("datetime2");
 
@@ -87,7 +93,27 @@ namespace E_commerce.Migrations
 
                     b.HasIndex("BuyerId");
 
+                    b.HasIndex("CompletedOrderId");
+
                     b.ToTable("Cards");
+                });
+
+            modelBuilder.Entity("E_commerce.Models.CompletedOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BuyerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BuyerId");
+
+                    b.ToTable("CompletedOrders");
                 });
 
             modelBuilder.Entity("E_commerce.Models.OrderedProduct", b =>
@@ -238,6 +264,19 @@ namespace E_commerce.Migrations
                         .WithMany()
                         .HasForeignKey("BuyerId");
 
+                    b.HasOne("E_commerce.Models.CompletedOrder", null)
+                        .WithMany("cards")
+                        .HasForeignKey("CompletedOrderId");
+
+                    b.Navigation("Buyer");
+                });
+
+            modelBuilder.Entity("E_commerce.Models.CompletedOrder", b =>
+                {
+                    b.HasOne("E_commerce.Models.Buyer", "Buyer")
+                        .WithMany()
+                        .HasForeignKey("BuyerId");
+
                     b.Navigation("Buyer");
                 });
 
@@ -292,6 +331,11 @@ namespace E_commerce.Migrations
             modelBuilder.Entity("E_commerce.Models.Card", b =>
                 {
                     b.Navigation("OrderedProducts");
+                });
+
+            modelBuilder.Entity("E_commerce.Models.CompletedOrder", b =>
+                {
+                    b.Navigation("cards");
                 });
 
             modelBuilder.Entity("E_commerce.Models.Product", b =>

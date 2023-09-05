@@ -1,0 +1,43 @@
+﻿@model PrevOrderViewModel
+
+@{
+    ViewData["Title"] = "Previous Orders";
+}
+
+<div class="container">
+    <h1>Previous Orders</h1>
+
+    @if (Model.LLOP.Count == 0)
+    {
+        <p>No previous orders found.</p>
+    }
+    else
+    {
+        @foreach (var card in Model.LLOP)
+        {
+            <h3>Order ID: @card.First().CardID</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var orderedProduct in card)
+                    {
+                        <tr>
+                            @{
+                                int n = orderedProduct.productID ?? 0;
+                                Product curr_p = Model.products.FirstOrDefault(s => s.Id == n);
+                               
+                            }
+                            <td>@curr_p.Name</td>
+                            <td>@orderedProduct.Quantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+</div>
