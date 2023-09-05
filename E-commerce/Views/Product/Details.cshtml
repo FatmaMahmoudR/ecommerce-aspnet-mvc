@@ -1,4 +1,5 @@
-﻿@model Product
+﻿@model ProductWithQuantityViewModel
+@inject IHttpContextAccessor _contxt;
 @{
     ViewData["Title"] = "Details";
 }
@@ -8,39 +9,130 @@
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
-            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="/img/Products/@Model.Image" alt="..." /></div>
+            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="/img/Products/@Model.product.Image" alt="..." /></div>
             <div class="col-md-6">
-                <div class="small mb-1">Seller ID: @Model.SellerId</div>
-                <h1 class="display-5 fw-bolder">@Model.Name</h1>
+                <div class="small mb-1">Seller ID: @Model.product.SellerId</div>
+                <h1 class="display-5 fw-bolder">@Model.product.Name</h1>
                 <div class="fs-5 mb-5">
-                    <span >$@Model.Price</span>
+                    <span>$@Model.product.Price</span>
                     
                 </div>
-                <p class="lead">@Model.Description</p>
+                <p class="lead">@Model.product.Description</p>
                 <br />
-                @if (Model.Quantity >= 5)
+                @if (Model.product.Quantity >= 5)
                 {
-                    <p class="lead"><span class="badge bg-success text-white rounded-pill">@Model.Quantity</span> Item Left </p>
+                    <p class="lead"><span class="badge bg-success text-white rounded-pill">@Model.product.Quantity</span> Item Left </p>
                 }
                 else
 
                 {
-                    <p class="lead"><span class="badge bg-danger text-white rounded-pill">@Model.Quantity</span> Item Left </p>
+                    <p class="lead"><span class="badge bg-danger text-white rounded-pill">@Model.product.Quantity</span> Item Left </p>
 
                 }
                 <div class="d-flex">
-                    <input class="form-control text-center me-3" id="inputQuantity" type="number" value="1" style="max-width: 3rem" />
-                    
-                    <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                        <i class="bi-cart-fill me-1"></i>
-                        Add to cart
-                    </button>
+
+                    @{
+                        var productQuantity = Model.product.Quantity;
+                       
+                        
+                    }
+
+                    @if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username")))
+                    {
+
+
+                        <form method="post" action="/Product/AddItemToCard/@Model" class="form-group">
+                            <input asp-for="product.Id" value="@Model.product.Id" hidden />
+
+                            
+
+                            <div class="Qinput">
+                                <span class="minuss"><bold>-</bold></span>
+                                <input id="Q" min="1" max="@productQuantity" asp-for="quantity" type="number" class="form-control" />
+                                <span class="pluss"> <bold>+</bold></span>
+                            </div>
+                               
+
+
+
+                            <button onclick="showAlert()" class="btn btn-outline-dark flex-shrink-0" style="margin-top:50px;" type="submit">
+                                <i class="bi-cart-fill me-1"></i>
+                                Add to cart
+                            </button>
+
+                        </form>
+                        
+
+
+                    }else
+                    {
+                        <a class="btn btn-outline-dark flex-shrink-0" type="button" asp-action="Login" asp-controller="Buyer" >
+                            <i class="bi-cart-fill me-1"></i>
+                            Add to cart
+                        </a>
+                    }
+
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<style>
+    span {
+        cursor: pointer;
+    }
+
+    .number {
+        margin: 100px;
+    }
+
+    .minuss, .pluss {
+        width: 31px;
+        height: 31px;
+        background: #f2f2f2;
+        border-radius: 4px;
+        padding: 5px 5px 5px 5px;
+        border: 1px solid #ddd;
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .Qinput{
+        width:300px;
+    }
+  
+        .form-control{
+            display:inline;
+            width:30%;
+        }
+</style>
+<script>
+    function showAlert() {
+        alert("Product Added Successsfully");
+    }
+
+
+    $(document).ready(function () {
+        $('.minuss').click(function () {
+            var $input = $(this).parent().find('#Q');
+            var count = parseInt($input.val()) - 1;
+            count = count < 1 ? 1 : count;
+            $input.val(count);
+            $input.change();
+            return false;
+        });
+        $('.pluss').click(function () {
+            var $input = $(this).parent().find('#Q');
+            var count = parseInt($input.val()) + 1;
+            count = count > @productQuantity ? @productQuantity : count;
+            $input.val(count);
+            $input.change();
+            return false;
+        });
+    });
+</script>
 
 
 

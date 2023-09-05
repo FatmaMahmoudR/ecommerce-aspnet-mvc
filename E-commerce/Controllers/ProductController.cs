@@ -1,7 +1,10 @@
-﻿using E_commerce.Models;
+﻿using E_commerce.Data.Static;
+using E_commerce.Models;
 using E_commerce.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using System.Runtime.Intrinsics.X86;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace E_commerce.Controllers
@@ -10,12 +13,23 @@ namespace E_commerce.Controllers
     {
 
         EcommerceCountext db = new EcommerceCountext();
-        
+
+        private readonly IHttpContextAccessor _contxt;
+
+        public ProductController(IHttpContextAccessor c)
+        {
+            _contxt = c;
+        }
         public IActionResult Index()
         {
             ProductJoinSellerViewModel vm = new ProductJoinSellerViewModel();
-            vm.Products = db.Products.ToList();
-            vm.Sellers = db.Sellers.ToList();
+            
+            if (_contxt.HttpContext.Session.GetString("UserRole") == "Seller")
+                vm.Products = db.Products.Where(p => p.SellerId == _contxt.HttpContext.Session.GetInt32("id")).ToList();
+            else 
+                vm.Products = db.Products.ToList();
+
+            vm.Sellers = db.Sellers.ToList(); 
 
             return View(vm);
         }
@@ -27,18 +41,25 @@ namespace E_commerce.Controllers
             ProductJoinSellerViewModel vm = new ProductJoinSellerViewModel();
           
             vm.Sellers = db.Sellers.ToList();
-            var searchResults = db.Products.Where(p => p.Name.Contains(value));
-            vm.Products = searchResults.ToList();
+
+            if (_contxt.HttpContext.Session.GetString("UserRole") == "Seller")
+                vm.Products = db.Products.Where(p => p.SellerId == _contxt.HttpContext.Session.GetInt32("id") && p.Name.Contains(value)).ToList();
+            else
+                vm.Products = db.Products.Where(p => p.Name.Contains(value)).ToList();
 
             return View(vm);
         }
 
         public IActionResult Details(int id)
         {
-
+            ProductWithQuantityViewModel vm = new ProductWithQuantityViewModel();
             Product p = db.Products.FirstOrDefault(s => s.Id == id);
+            vm.product = p;
+            vm.quantity = 1;
+           
 
-            return View(p);
+
+            return View(vm);
         }
 
         public IActionResult New()
@@ -58,6 +79,7 @@ namespace E_commerce.Controllers
 
             if (ModelState.IsValid == true)
             {
+                p.SellerId = (int)_contxt.HttpContext.Session.GetInt32("id");
                 db.Products.Add(p);
 
                 db.SaveChanges();
@@ -120,5 +142,50 @@ namespace E_commerce.Controllers
             db.SaveChanges();
             return RedirectToAction("index");
         }
+
+        [HttpPost]
+        public  ActionResult AddItemToCard(ProductWithQuantityViewModel vm)
+        {
+            //assign item as ordered 
+            OrderedProduct op = new OrderedProduct();
+            op.productID = vm.product.Id;
+            op.BuyerID = (int)_contxt.HttpContext.Session.GetInt32("id");
+            op.Quantity = vm.quantity;
+
+            //retreive the card of the customer from database to update it with the new added product
+            Card c = db.Cards.Where(x => x.BuyerId == op.BuyerID).FirstOrDefault();
+            op.Card = c;
+            db.OrderedProducts.Add(op);
+            db.SaveChanges();
+
+            c.OrderedProducts.Add(op);
+            db.SaveChanges();
+
+            // minus the ordered quantity of this item from the available amount
+            Product OldP = db.Products.Find(op.productID);
+            
+            OldP.Quantity -= vm.quantity;
+
+            db.SaveChanges();
+
+             return RedirectToAction("index");
+        }
+
+        //Redirect to pevious page 
+        public IActionResult RedirectToPreviousView()
+        {
+            string previousUrl = Request.Headers["Referer"].ToString();
+
+            if (!string.IsNullOrEmpty(previousUrl))
+            {
+                return Redirect(previousUrl);
+            }
+            else
+            {
+                // Handle the case when there is no previous view
+                return RedirectToAction("Index", "Home"); // Redirect to a default page
+            }
+        }
+
     }
 }

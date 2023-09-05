@@ -19,13 +19,13 @@
                 <form method="Post" action="/Product/SaveAfterEdit/@Model.Id">
                     <div class="form-group">
                        
-                        <input asp-for="Id" value="@Model.Id" hidden />
-                        <input asp-for="Image" value="@Model.Image" hidden/>
+                        <input asp-for="Id" value="@Model.Id" hidden /><input asp-for="Image" value="@Model.Image" hidden />
 
                         
 
                         <label asp-for="Image" >Image</label>
                         <img src="/img/Products/@Model.Image" style="width: 100px;" />
+
                         <input asp-for="Image" value="@Model.Image" accept="image/*" type="file" class="form-control" placeholder="Insert Image">
                         <span asp-validation-for="Image" class="text-danger"></span> 
                     </div>
@@ -60,11 +60,11 @@
                         <select class="form-control" asp-for="M_F" asp-items="Genders"></select>
 
                     </div>
-                    <div class="form-group">
+                   @*  <div class="form-group">
                         <label asp-for="SellerId"></label>
                         <select class="form-control" asp-for="SellerId" asp-items="sellers"></select>
 
-                    </div>
+                    </div> *@
                     <br />
 
                     <div style="padding-bottom: 5px; ">

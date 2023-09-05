@@ -11,6 +11,7 @@ namespace E_commerce.Models
         public DbSet<Card> Cards { get; set; }
         public DbSet<OrderedProduct> OrderedProducts { get; set; }
         public DbSet<ShippingInfo> Shippings { get; set; }
+        public DbSet<CompletedOrder> CompletedOrders { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -1,11 +1,9 @@
 ﻿@model ProductJoinSellerViewModel
+@inject IHttpContextAccessor _contxt;
 @{
     ViewData["Title"] = "Index";
+
 }
-
-
-
-
 
 
 
@@ -16,22 +14,27 @@
 
 }
 
+
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-            <div class="col mb-5">
-                <div class="card text-white bg-danger h-90">
+            @if (_contxt.HttpContext.Session.GetString("UserRole") == "Seller")       //Only Sellers can edit or delete
+            {
+                  <div class="col mb-5">
+                    <div class="card text-white bg-danger h-90">
 
-                    <div class="card-header">ADD NEW PRODUCT</div>
-                    <div class="card-body">
-                        <a href="/Product/New">
+                        <div class="card-header">ADD NEW PRODUCT</div>
+                        <div class="card-body">
+                            <a href="/Product/New">
 
-                            <img class="card-img-top Center" src="/img/addnew.jpg" alt="..." />
-                        </a>
+                                <img class="card-img-top Center" src="/img/addnew.jpg" alt="..." />
+                            </a>
+                        </div>
+
                     </div>
-
                 </div>
-            </div>
+            }
+           
 
                
 
@@ -39,32 +42,31 @@
             {
                 <div class="col mb-5">
                     <div class="card h-100">
-                        <!-- Seller Name -->
 
+                        <!-- Card Header -->
                         <div class="card-header d-flex justify-content-between align-items-start">
                             <!-- Seller Name -->
                             <span class="text-danger" style="color: darkred; font-weight: 700;">
                                 Seller: @s[p[x].SellerId-1].Name
                             </span>
-                            <div>
-                                <a class="btn btn-outline-dark" href="/Product/edit/@p[x].Id">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a class="btn btn-outline-danger" href="/Product/delete/@p[x].Id">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </div>
+                            @if (_contxt.HttpContext.Session.GetString("UserRole") == "Seller")       //Only Sellers can edit or delete 
+                            {
+                                <div>
+                                    <a class="btn btn-outline-dark" href="/Product/edit/@p[x].Id">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a class="btn btn-outline-danger" href="/Product/delete/@p[x].Id">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            }
+
                         </div>
                         <!-- Product image-->
-                        
-                        <br>
-                        <br>
-
-
-                        <img class="card-img-top" src="/img/Products/@p[x].Image" alt="..." />
+                        <img style="padding:15px; margin-top:20px; " class="card-img-top"  src="/img/Products/@p[x].Image" alt="..." />
 
                         <!-- Product details-->
-                        <div class="card-body p-4">
+                        <div style="padding:15px;" class=" card-body p-4">
                             <div class="text-center">
                                 <h class="fw-bolder">@p[x].Name</h>
                                 <p> @p[x].Category </p>

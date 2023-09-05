@@ -1,6 +1,7 @@
 ﻿using E_commerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using E_commerce.Data.Static;
+using NuGet.Protocol.Plugins;
 
 namespace E_commerce.Controllers
 {
@@ -22,7 +23,32 @@ namespace E_commerce.Controllers
 
         public IActionResult Profile()
         {
-            return View();
+            Seller seller = db.Sellers.Find(_contxt.HttpContext.Session.GetInt32("id"));
+
+            return View(seller);
+        }
+
+        public IActionResult SaveChange(Seller NewP, int Id)
+        {
+            Seller OldP = db.Sellers.Find(Id);
+
+            
+            if (ModelState.IsValid == true)
+            {
+                OldP.Name = NewP.Name;
+                OldP.Id = NewP.Id;
+                OldP.username = NewP.username;
+                OldP.password = NewP.password;
+                OldP.Phone = NewP.Phone;
+                OldP.ProfilePicture = NewP.ProfilePicture;
+                OldP.AccCreationDate = NewP.AccCreationDate;
+                OldP.Bio = NewP.Bio;
+                OldP.Email = NewP.Email;
+                db.SaveChanges();
+                return RedirectToAction("profile","Seller",Id);
+
+            }
+            return View("Profile", NewP);
         }
 
 
@@ -36,23 +62,30 @@ namespace E_commerce.Controllers
             if (db.Buyers.Any(x => x.username == s.username) && db.Sellers.Any(x => x.username == s.username))
             {
                 ViewBag.Notification = "This username has already exist";
-                return View("Register", s);
+                return View("Register");
             }
             else if (db.Buyers.Any(y => y.Email == s.Email) && db.Sellers.Any(y => y.Email == s.Email))
             {
                 ViewBag.Notification = "This email address is already in use";
-                return View("Register", s);
+                return View("Register");
             }
             else
             {
+                s.AccCreationDate = DateTime.Now;
                 db.Sellers.Add(s);
                 db.SaveChanges();
 
-                //HttpContext.Session.SetString("username", s.username);
-                //HttpContext.Session.SetString("id", s.Id.ToString());
-                //HttpContext.Session.SetString("UserRole", UserRoles.Buyer);
+                _contxt.HttpContext.Session.SetString("username", s.username);
+                _contxt.HttpContext.Session.SetInt32("id", s.Id);
+                _contxt.HttpContext.Session.SetString("UserRole", UserRoles.Seller);
 
-                return RedirectToAction("Login");
+
+                TempData["SessionId"] = HttpContext.Session.GetString("id");
+                TempData["SessionUsername"] = HttpContext.Session.GetString("username");
+                TempData["SessionUserRole"] = HttpContext.Session.GetString("UserRole");
+
+
+                return RedirectToAction("Index", "Home");
             }
 
         }

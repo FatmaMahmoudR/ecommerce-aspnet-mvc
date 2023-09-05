@@ -58,10 +58,11 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 @if (_contxt.HttpContext.Session.GetString("UserRole") == "Buyer") // Redirect buyers to "/Buyer/Profile" and Sellers to "/Seller/Profile"
                                 {
-                                    <a class="dropdown-item" asp-controller="Buyer" asp-action="Profile"><i class="bi bi-person"></i>Profile</a>
+                                    <a class="dropdown-item" asp-controller="Buyer" asp-action="Profile" asp-route-id="@_contxt.HttpContext.Session.GetInt32("id")" ><i class="bi bi-person"></i> Profile</a>
                                 }else
                                 {
-                                    <a class="dropdown-item" asp-controller="Seller" asp-action="Profile"><i class="bi bi-person"></i>Profile</a>
+                                    <a class="dropdown-item" asp-controller="Seller" asp-action="Profile" asp-route-id="@_contxt.HttpContext.Session.GetInt32("id")"><i class="bi bi-person"></i> Profile</a>
+
 
                                 }
 
@@ -124,7 +125,7 @@
     @RenderBody()
 
     <!-- Footer-->
-    <footer class="py-5 bg-dark">
+    <footer class="py-5 bg-dark" style="margin-top:400px; ">
         <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
     </footer>
     
@@ -132,6 +133,7 @@
 </body>
 
 @RenderSection("scripts",false)
+
 <style>
     .a{
         justify-content: space-around;

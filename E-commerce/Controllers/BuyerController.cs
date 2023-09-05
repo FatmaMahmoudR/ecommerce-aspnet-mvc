@@ -1,7 +1,8 @@
 ﻿using E_commerce.Data.Static;
 using E_commerce.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Providers.Entities;
+using System;
+
 
 namespace E_commerce.Controllers
 {
@@ -22,9 +23,33 @@ namespace E_commerce.Controllers
             return View(U);
            
         }
-        public IActionResult Profile()
+        public IActionResult Profile( )
         {
-            return View();
+             //TempData["SessionId"] = HttpContext.Session.GetString("id");
+            Buyer buyer = db.Buyers.Find(HttpContext.Session.GetInt32("id"));
+            return View(buyer);
+        }
+        public IActionResult SaveChange(Buyer NewP, int Id)
+        {
+            Buyer OldP = db.Buyers.Find(Id);
+
+
+            if (ModelState.IsValid == true)
+            {
+                OldP.Name = NewP.Name;
+                OldP.Id = NewP.Id;
+                OldP.username = NewP.username;
+                OldP.password = NewP.password;
+                OldP.Phone = NewP.Phone;
+                OldP.ProfilePicture = NewP.ProfilePicture;
+                OldP.AccCreationDate = NewP.AccCreationDate;
+               
+                OldP.Email = NewP.Email;
+                db.SaveChanges();
+                return RedirectToAction("profile", "Buyer", Id);
+
+            }
+            return View("Profile", NewP);
         }
 
         public IActionResult Register()
@@ -37,23 +62,38 @@ namespace E_commerce.Controllers
             if (db.Buyers.Any(x => x.username == s.username) && db.Sellers.Any(x => x.username == s.username))
             {
                 ViewBag.Notification = "This username has already exist";
-                return View("Register", s);
+                return View("Register");
             }
             else if (db.Buyers.Any(y => y.Email == s.Email) && db.Sellers.Any(y => y.Email == s.Email))
             {
                 ViewBag.Notification = "This email address is already in use";
-                return View("Register", s);
+                return View("Register");
             }
             else
             {
+                s.AccCreationDate = DateTime.Now;
+
+                
                 db.Buyers.Add(s);
                 db.SaveChanges();
 
-                //HttpContext.Session.SetString("username", s.username);
-                //HttpContext.Session.SetString("id", s.Id.ToString());
-                //HttpContext.Session.SetString("UserRole", UserRoles.Buyer);
+                Card BCard = new Card();
+                BCard.BuyerId = s.Id;
+                db.Cards.Add(BCard);
 
-                return RedirectToAction("Login");
+                db.SaveChanges();
+
+                _contxt.HttpContext.Session.SetString("username", s.username);
+                _contxt.HttpContext.Session.SetInt32("id", s.Id);
+                _contxt.HttpContext.Session.SetString("UserRole", UserRoles.Buyer);
+
+
+                TempData["SessionId"] = HttpContext.Session.GetString("id");
+                TempData["SessionUsername"] = HttpContext.Session.GetString("username");
+                TempData["SessionUserRole"] = HttpContext.Session.GetString("UserRole");
+
+
+                return RedirectToAction("Index", "Home");
             }
 
         }
@@ -88,6 +128,7 @@ namespace E_commerce.Controllers
                 ViewBag.Notification = "Invalid username or password";
                 return View();
             }
+        
         }
 
         
