@@ -18,5 +18,13 @@ namespace E_commerce.Controllers
             vm.products= db.Products.ToList();
             return View(vm);
         }
+        public IActionResult Delete(int id)
+        {
+            OrderedProduct op = db.OrderedProducts.Find(id);
+            int? Bid = op.BuyerID;
+            db.Remove(op);
+            db.SaveChanges();
+            return RedirectToAction("index", new {id = Bid } );
+        }
     }
 }

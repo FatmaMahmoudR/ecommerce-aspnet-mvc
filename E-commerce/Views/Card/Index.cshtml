@@ -16,11 +16,11 @@
 </head>
 
 
-<section class="h-100 h-custom" style="background-color: #d2c9ff;">
+<section  style="background-color: #d2c9ff;">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-12">
-                <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+                <div class="card card-registration card-registration-2" style="border-radius: 15px; margin-left:100px; margin-right:100px">
                     <div class="card-body p-0">
                         <div class="row g-0">
                             <div class="col-lg-8">
@@ -57,7 +57,7 @@
                                                 }
                                             </div>
                                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                                <a href="#!" class="text-muted"><i class="bi bi-x-lg"></i></a>
+                                                <a asp-controller="Card" asp-action="Delete" asp-route-id="@it.Id" class="text-muted"><i class="bi bi-x-lg"></i></a>
                                             </div>
                                         </div>
 
@@ -67,7 +67,7 @@
                                    
                                     <div class="pt-5">
                                         <h6 class="mb-0">
-                                            <a href="#!" class="text-body">
+                                            <a asp-action="Index" asp-controller="Product" class="text-body">
                                                 <i class="bi bi-arrow-left me-2"></i>Back to shop
                                             </a>
                                         </h6>
@@ -127,7 +127,11 @@
 </section>
 
 
-
+<style>
+    section{
+        padding:unset;
+    }
+</style>
 
 
 
