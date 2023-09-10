@@ -225,8 +225,20 @@ namespace E_commerce.Controllers
             //retreive the active card of the customer from database to update it with the new added product
             Card c = db.Cards.Where(x => x.BuyerId == op.BuyerID && x.active==true).FirstOrDefault();
             op.CardID = c.Id;
-            db.OrderedProducts.Add(op);
-            db.SaveChanges();
+            var test = db.OrderedProducts.Where(x => x.productID == op.productID && x.CardID == op.CardID && x.BuyerID == op.BuyerID).FirstOrDefault();
+
+            if (test == null)
+            {
+                db.OrderedProducts.Add(op);
+                db.SaveChanges();
+            }
+            else
+            {
+                test.Quantity += vm.quantity;
+                
+                db.SaveChanges();
+            }
+            
 
             //increase card session by 1
 
