@@ -113,7 +113,7 @@
                                         <h5>$ @total </h5>
                                     </div>
 
-                                    <a asp-action="PlaceOrder" asp-controller="Card" asp-route-id="@Model.card.Id" type="button" class="btn btn-dark btn-block btn-lg"
+                                        <a onclick="showAlert()" asp-action="PlaceOrder" asp-controller="Card" asp-route-id="@Model.card.Id" type="button" class="btn btn-dark btn-block btn-lg"
                                        data-mdb-ripple-color="dark">
                                         Place An Order
                                     </a>
@@ -139,7 +139,13 @@
 
 
 
+<script>
+    function showAlert() {
+        alert("Order Placed Successsfully, Check details on Orders section");
+    }
 
+
+</script>
 
 
 
