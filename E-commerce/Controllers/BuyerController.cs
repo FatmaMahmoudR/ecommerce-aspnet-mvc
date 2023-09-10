@@ -28,9 +28,20 @@ namespace E_commerce.Controllers
         }
         public IActionResult Profile()
         {
-            //TempData["SessionId"] = HttpContext.Session.GetString("id");
-            Buyer buyer = db.Buyers.Find(HttpContext.Session.GetInt32("id"));
-            return View(buyer);
+
+            if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username"))
+              && (_contxt.HttpContext.Session.GetString("UserRole") == UserRoles.Buyer))
+
+            {
+                //TempData["SessionId"] = HttpContext.Session.GetString("id");
+                Buyer buyer = db.Buyers.Find(HttpContext.Session.GetInt32("id"));
+                return View(buyer);
+
+            }
+            else
+                return RedirectToAction("AccessDenied", "Product");
+
+            
         }
 
         [HttpPost]
@@ -128,9 +139,13 @@ namespace E_commerce.Controllers
 
                 //to show the number of items in the shopping card button
                 Card c = db.Cards.FirstOrDefault(x => x.BuyerId == buyer.Id);
-                c.OrderedProducts = db.OrderedProducts.Where(x => x.BuyerID == buyer.Id).ToList();
+                if (c != null)
+                {
+                    c.OrderedProducts = db.OrderedProducts.Where(x => x.BuyerID == buyer.Id).ToList();
 
-                _contxt.HttpContext.Session.SetInt32("card", c.OrderedProducts.Count());
+                    _contxt.HttpContext.Session.SetInt32("card", c.OrderedProducts.Count());
+                }
+              
 
 
                 TempData["SessionId"] = HttpContext.Session.GetString("id");
@@ -149,22 +164,34 @@ namespace E_commerce.Controllers
 
         public IActionResult PrevOrders(int id)
         {
-            PrevOrderViewModel vm = new PrevOrderViewModel();
-            var result = db.OrderedProducts
-           .Where(op => op.BuyerID == id )
-           .GroupBy(op => op.CardID)
-           .Where(g => g.Count() >= 1)
-          .Select(g => new
-          {
-               CardID = g.Key,
-                OrderedProducts = g.ToList()
-          })
-          .ToList();
-            
-            List<List<OrderedProduct>> listOfCards = result.Select(item => item.OrderedProducts).ToList();
-            vm.products = db.Products.ToList();
-            vm.LLOP = listOfCards;
-            return View(vm);
+            if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username"))
+                && (_contxt.HttpContext.Session.GetString("UserRole") == UserRoles.Buyer)
+                && ( id == _contxt.HttpContext.Session.GetInt32("id") ))
+                
+            {
+
+                PrevOrderViewModel vm = new PrevOrderViewModel();
+                var result = db.OrderedProducts
+               .Where(op => op.BuyerID == id)
+               .GroupBy(op => op.CardID)
+               .Where(g => g.Count() >= 1)
+              .Select(g => new
+              {
+                  CardID = g.Key,
+                  OrderedProducts = g.ToList()
+              })
+              .ToList();
+
+                List<List<OrderedProduct>> listOfCards = result.Select(item => item.OrderedProducts).ToList();
+                vm.products = db.Products.ToList();
+                vm.LLOP = listOfCards;
+                return View(vm);
+
+
+            }
+            else
+                return RedirectToAction("AccessDenied","Product");
+           
 
         }
     }

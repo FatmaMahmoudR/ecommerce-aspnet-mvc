@@ -16,18 +16,25 @@ namespace E_commerce.Controllers
 
         private readonly IHttpContextAccessor _contxt;
 
+
         public ProductController(IHttpContextAccessor c)
         {
             _contxt = c;
+        }
+        
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
         public IActionResult Index()
         {
             ProductJoinSellerViewModel vm = new ProductJoinSellerViewModel();
             
             if (_contxt.HttpContext.Session.GetString("UserRole") == "Seller")
-                vm.Products = db.Products.Where(p => p.SellerId == _contxt.HttpContext.Session.GetInt32("id")).ToList();
+                vm.Products = db.Products.Where(p => p.SellerId == _contxt.HttpContext.Session.GetInt32("id")
+                && p.IsDeleted==false).ToList();
             else 
-                vm.Products = db.Products.ToList();
+                vm.Products = db.Products.Where(p=>p.IsDeleted==false).ToList();
 
             vm.Sellers = db.Sellers.ToList(); 
 
@@ -43,9 +50,11 @@ namespace E_commerce.Controllers
             vm.Sellers = db.Sellers.ToList();
 
             if (_contxt.HttpContext.Session.GetString("UserRole") == "Seller")
-                vm.Products = db.Products.Where(p => p.SellerId == _contxt.HttpContext.Session.GetInt32("id") && p.Name.Contains(value)).ToList();
+                vm.Products = db.Products
+                    .Where(p => p.SellerId == _contxt.HttpContext.Session.GetInt32("id") && p.Name.Contains(value) && p.IsDeleted == false)
+                    .ToList();
             else
-                vm.Products = db.Products.Where(p => p.Name.Contains(value)).ToList();
+                vm.Products = db.Products.Where(p => p.Name.Contains(value) && p.IsDeleted == false).ToList();
 
             return View(vm);
         }
@@ -56,37 +65,52 @@ namespace E_commerce.Controllers
             Product p = db.Products.FirstOrDefault(s => s.Id == id);
             vm.product = p;
             vm.quantity = 1;
-           
 
-
+            if (p.IsDeleted == true) return RedirectToAction("AccessDenied");
             return View(vm);
         }
 
         public IActionResult New()
         {
-            List<Seller> sellers = db.Sellers.ToList();
-            ViewData["sellers"] = sellers;
-            return View();
+            if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username"))
+                && (_contxt.HttpContext.Session.GetString("UserRole") == UserRoles.Seller)){
+
+                List<Seller> sellers = db.Sellers.ToList();
+                ViewData["sellers"] = sellers;
+                return View();
+            }
+            else
+                return RedirectToAction("AccessDenied");
+
+
         }
 
         [HttpPost]
         public IActionResult SaveAfterNew(Product p)
         {
-            List<Seller> sellers = db.Sellers.ToList();
-            ViewData["sellers"] = sellers;
-
-           
-
-            if (ModelState.IsValid == true)
+            if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username"))
+               && (_contxt.HttpContext.Session.GetString("UserRole") == UserRoles.Seller))
             {
-                p.SellerId = (int)_contxt.HttpContext.Session.GetInt32("id");
-                db.Products.Add(p);
 
-                db.SaveChanges();
-                return RedirectToAction("index", p);
+                p.IsDeleted = false;
+                List<Seller> sellers = db.Sellers.ToList();
+                ViewData["sellers"] = sellers;
+
+                if (ModelState.IsValid == true)
+                {
+                    p.SellerId = (int)_contxt.HttpContext.Session.GetInt32("id");
+                    db.Products.Add(p);
+
+                    db.SaveChanges();
+                    return RedirectToAction("index", p);
+                }
+                else
+                    return View("New", p);
+
             }
             else
-                return View("New", p);
+                return RedirectToAction("AccessDenied");
+           
 
 
         }
@@ -95,52 +119,98 @@ namespace E_commerce.Controllers
        
         public IActionResult Edit(int id)
         {
+            //sellers only can edit 
+            if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username"))
+               && (_contxt.HttpContext.Session.GetString("UserRole") == UserRoles.Seller))
+            {
+                Product prod = db.Products.Find(id);
 
-            Product prod = db.Products.Find(id);
+                //only the seller of the product can edit it 
+                if (prod.SellerId != _contxt.HttpContext.Session.GetInt32("id"))
+                    return RedirectToAction("AccessDenied");
 
-            List<Seller> sellers = db.Sellers.ToList();
-            ViewData["sellers"] = sellers;
+                List<Seller> sellers = db.Sellers.ToList();
+                ViewData["sellers"] = sellers;
 
-            return View(prod);
+                return View(prod);
+
+            }
+            else
+                return RedirectToAction("AccessDenied");
+
+           
         }
+
         [HttpPost]
         public IActionResult SaveAfterEdit(Product NewP, int Id)
         {
-           Product OldP = db.Products.Find(Id);
-
-            List<Seller> sellers = db.Sellers.ToList();
-            ViewData["sellers"] = sellers;
-
-            if (ModelState.IsValid == true)
+            if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username"))
+               && (_contxt.HttpContext.Session.GetString("UserRole") == UserRoles.Seller))
             {
-                OldP.Name= NewP.Name;
-                OldP.Price= NewP.Price;
-                OldP.Description= NewP.Description;
-                OldP.Price= NewP.Price;
-                OldP.Quantity= NewP.Quantity;
-                OldP.Category= NewP.Category;
-                OldP.M_F= NewP.M_F;
-                OldP.Image= NewP.Image;
-                db.SaveChanges();
-                return RedirectToAction("index");
+
+                if (Id != _contxt.HttpContext.Session.GetInt32("id"))
+                    return RedirectToAction("AccessDenied");
+                Product OldP = db.Products.Find(Id);
+
+                List<Seller> sellers = db.Sellers.ToList();
+                ViewData["sellers"] = sellers;
+
+                if (ModelState.IsValid == true)
+                {
+                    OldP.Name = NewP.Name;
+                    OldP.Price = NewP.Price;
+                    OldP.Description = NewP.Description;
+                    OldP.Price = NewP.Price;
+                    OldP.Quantity = NewP.Quantity;
+                    OldP.Category = NewP.Category;
+                    OldP.M_F = NewP.M_F;
+                    OldP.Image = NewP.Image;
+                    db.SaveChanges();
+                    return RedirectToAction("index");
+
+                }
+                return View("Edit", NewP);
+
 
             }
-            return View("Edit", NewP);
+            else
+                return RedirectToAction("AccessDenied");
+
+
+            
         }
 
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            return View(db.Products.Find(id));
+            if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username"))
+               && (_contxt.HttpContext.Session.GetString("UserRole") == UserRoles.Seller))
+            {
+                return View(db.Products.Find(id));
+
+            }
+            else
+                return RedirectToAction("AccessDenied");
+           
         }
 
 
         public IActionResult Delete2(int id)
         {
-           Product pp = db.Products.Find(id);
-            db.Remove(pp);
-            db.SaveChanges();
-            return RedirectToAction("index");
+            if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username"))
+              && (_contxt.HttpContext.Session.GetString("UserRole") == UserRoles.Seller))
+            {
+                Product pp = db.Products.Find(id);
+                pp.IsDeleted = true;
+                //db.Remove(pp);
+                db.SaveChanges();
+                return RedirectToAction("index");
+
+            }
+            else
+                return RedirectToAction("AccessDenied");
+
+           
         }
 
         [HttpPost]

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using E_commerce.Data.Static;
 using NuGet.Protocol.Plugins;
+using E_commerce.ViewModels;
 
 namespace E_commerce.Controllers
 {
@@ -23,9 +24,19 @@ namespace E_commerce.Controllers
 
         public IActionResult Profile()
         {
-            Seller seller = db.Sellers.Find(_contxt.HttpContext.Session.GetInt32("id"));
+            if (!string.IsNullOrEmpty(_contxt.HttpContext.Session.GetString("username"))
+               && (_contxt.HttpContext.Session.GetString("UserRole") == UserRoles.Seller))
 
-            return View(seller);
+            {
+                Seller seller = db.Sellers.Find(_contxt.HttpContext.Session.GetInt32("id"));
+
+                return View(seller);
+
+
+            }
+            else
+                return RedirectToAction("AccessDenied", "Product");
+            
         }
 
         [HttpPost]

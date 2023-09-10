@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.Eventing.Reader;
 
 namespace E_commerce.Models
 {
@@ -18,6 +19,8 @@ namespace E_commerce.Models
         public double? Price { get; set; }
 
         public string? Image { get; set; }
+
+        public bool? IsDeleted { get; set; }
 
         [ForeignKey("Seller")]
         public int SellerId { get; set; }
